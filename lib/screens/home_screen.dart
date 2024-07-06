@@ -3,8 +3,10 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:news_app_flutter_course/consts/vars.dart';
 import 'package:news_app_flutter_course/services/utils.dart';
 import 'package:news_app_flutter_course/widgets/drawer_widget.dart';
+import 'package:news_app_flutter_course/widgets/tabs.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/theme_provider.dart';
@@ -17,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var newsType = NewsType.allNews;
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).getColor;
@@ -44,19 +47,33 @@ class _HomeScreenState extends State<HomeScreen> {
             child: 
             Row(
               children: [
-              GestureDetector(
-                onTap: (){},
-                child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Theme.of(context).cardColor),
+              TabsWidget(
+                text: 'All news', 
+                color: newsType == NewsType.allNews? Theme.of(context).cardColor : Colors.transparent, 
+                func: () {
+                  if(newsType == NewsType.allNews)
+                    return;
+                  setState(() {
+                    newsType = NewsType.allNews;
+                  });
                 
-                child: const Padding(
-                  padding:  EdgeInsets.all(8.0),
-                  child: 
-                  Text('All News', 
-                  style: TextStyle(
-                    fontSize: 22),),
-                )),
-              )
+                }, 
+                fontSize: newsType == NewsType.allNews ? 22:14),
+              const SizedBox(
+                width: 25,
+              ),
+              TabsWidget(
+                text: 'All news', 
+                color: newsType == NewsType.topTrending? Theme.of(context).cardColor : Colors.transparent, 
+                func: () {
+                  if(newsType == NewsType.topTrending)
+                    return;
+                  setState(() {
+                    newsType = NewsType.topTrending;
+                  });
+                
+                }, 
+                fontSize: newsType == NewsType.topTrending ? 22:14),
             ],),
           )
         ],),
