@@ -1,3 +1,5 @@
+//import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -7,6 +9,7 @@ import 'package:news_app_flutter_course/consts/vars.dart';
 import 'package:news_app_flutter_course/services/utils.dart';
 import 'package:news_app_flutter_course/widgets/drawer_widget.dart';
 import 'package:news_app_flutter_course/widgets/tabs.dart';
+import 'package:news_app_flutter_course/widgets/vertical_spacing.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/theme_provider.dart';
@@ -41,14 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         drawer: const DrawerWidget(),
-        body: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: 
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(children: [
             Row(
               children: [
               TabsWidget(
-                text: 'All news', 
+                text: 'All News', 
                 color: newsType == NewsType.allNews? Theme.of(context).cardColor : Colors.transparent, 
                 func: () {
                   if(newsType == NewsType.allNews)
@@ -63,21 +65,47 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 25,
               ),
               TabsWidget(
-                text: 'All news', 
+                text: 'Top Trending', 
                 color: newsType == NewsType.topTrending? Theme.of(context).cardColor : Colors.transparent, 
                 func: () {
                   if(newsType == NewsType.topTrending)
                     return;
                   setState(() {
                     newsType = NewsType.topTrending;
-                  });
-                
+                  });                
                 }, 
                 fontSize: newsType == NewsType.topTrending ? 22:14),
-            ],),
-          )
-        ],),
+            ],
+            ),
+            const VerticalSpacing(10),
+            newsType == NewsType.topTrending?Container(): SizedBox(
+              height: kBottomNavigationBarHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  paginationButtons(function: (){}, text: "Prev"),
+                  paginationButtons(function: (){}, text: "Next"),
+                ],
+              ),
+            )
+          ],),
+        ),
       ),
     );
+  }
+
+  Widget paginationButtons({required Function function, required String text}) {
+    return    ElevatedButton(
+                  onPressed: (){function ();}, 
+                  // ignore: sort_child_properties_last
+                  child: Text(text),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.all(6),
+                    textStyle: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold
+                    )
+                    ),
+                );
   }
 }
