@@ -23,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var newsType = NewsType.allNews;
+  int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).getColor;
@@ -83,28 +84,52 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  paginationButtons(function: (){}, text: "Prev"),
+                  paginationButtons(text: "Prev",
+                  function: () {
+                    if(currentPageIndex == 0)
+                      return;
+                    setState(() {
+                      currentPageIndex -= 1;
+                    });
+                  }),
                   Flexible(
                     flex: 2,
                     child: ListView.builder(
+                      itemCount: 5,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: ((context, index){
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
+                          child: Material(
+                              color: currentPageIndex == index ? 
+                              Colors.blue : Theme.of(context).cardColor,
                           child: InkWell(
-                            onTap: (){},
-                            child: Container(
-                              color: Theme.of(context).cardColor,
-                              child: const Center(child: Padding(
+                            onTap: (){
+                              setState(() {
+                                currentPageIndex = index;
+                              });
+                              
+                            },
+                              child: Center(child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text('1'),
+                                child: Text("${index + 1}"),
                               )),
                             ),
                           ),
                         );
                       })),
                   ),
-                  paginationButtons(function: (){}, text: "Next"),
+                  paginationButtons(text: "Next",
+                  function: (){
+                    if(currentPageIndex == 4)
+                      return;
+
+                    setState(() {
+                      currentPageIndex += 1;
+                    });
+                    print("$currentPageIndex index");
+                  },
+                  ),
                 ],
               ),
             )
